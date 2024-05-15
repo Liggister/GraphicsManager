@@ -1,0 +1,7 @@
+Graphics Manager Copyright 2024 by Liggisten, developer@liggist.se
+See licence.txt for licencing details
+
+By using this graphics_manager, you accept the licence agreement as specified in licence.txt and agree that your licence does not allow you to use this package commercially.
+
+If you have a wish for use this package commercially, a separate licencing agreement can be made by contacting the author of this package.
+
