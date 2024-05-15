@@ -4,7 +4,7 @@
 It always seems to me that 80% of my projects is setting up the graphics side of it, and it tends to become a bit of a spagetti-code.
 So i wrote GraphicsManager, to handle the graphics side of {insert your project name here}, allowing you to focus on the fun side of your programming project.
 
-There is a discord server for this project; [Liggister_Discord] (https://discord.gg/wFsTng5VNE)
+There is a discord server for this project; [Liggister_Discord](https://discord.gg/wFsTng5VNE)
 
 This is a work-in-process and is offered as is, beware dragons ahead!
 #### A brief thank you to our contributers, your contribution is unvaluable!
