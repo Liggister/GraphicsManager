@@ -30,7 +30,7 @@ gman = GraphicsManager()
 ```
 If you wish to change the color palette:
 ```python
-gmain = GraphicsManager( colors=[ (0,0,0),(10,10,90),(220,5,180),(250,200,255),(180,160,250)] )
+gman = GraphicsManager( colors=[ (0,0,0),(10,10,90),(220,5,180),(250,200,255),(180,160,250)] )
 ```
 The order of colors is key, first color is black, second is background color, third is the frame color and fourth is the indicator/text color.
 #### Adding Display
