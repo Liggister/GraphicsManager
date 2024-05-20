@@ -7,8 +7,12 @@ import math
 
 class FunkyClockPlugin(GM_Plugin):
     def __init__(self, graphics_manager, position, size, **kwargs):
+        """ A analog clock plugin extension to the GM_Plugin class.
+        :param graphics_manager: The graphics manager instance.
+        :param position: The position of the plugin, (X,Y).
+        :param size: The size of the plugin, (length,width)."""
         super().__init__(graphics_manager, position, size)
-        self.version = (1,0,0,1)
+        self.version = (1,0,0,2)
         self.size = size[0]
         self.radius = int(self.size / 2)
         self.x = position[0]
@@ -17,6 +21,9 @@ class FunkyClockPlugin(GM_Plugin):
         self.lastSecEvent = 0
     
     def getClock(self):
+        """Returns the current time.
+        :return: (hour, minute, second, millis).
+        """
         timestamp = machine.RTC().datetime()
         cHour = timestamp[4]
         cMinute = timestamp[5]
@@ -28,6 +35,9 @@ class FunkyClockPlugin(GM_Plugin):
         return cHour, cMinute, cSecond, cMillis
 
     def getAngles(self, hour, minute, second, millis):
+        """Calculates the clock hand angles.
+        :return: hour_angle, minute_angle, second_angle, decisecond_angle.
+        """
         hourAngle = int((hour * 30) + (minute * 0.5))
         minuteAngle = int((minute * 6) + (second * 0.1))
         secondAngle = int(second * 6) + (millis * 0.006)
@@ -35,6 +45,11 @@ class FunkyClockPlugin(GM_Plugin):
         return hourAngle, minuteAngle, secondAngle, deciSecAngle
 
     def rotate(self, origin, point, radangle):
+        """Rotate a point around a origin.
+        :param origin: The origin point tuple; (x,y).
+        :param point: The point tuple; (x,y).
+        :param radangle: The angle in radians.
+        """
         ox, oy = origin
         px, py = point
 
@@ -43,6 +58,9 @@ class FunkyClockPlugin(GM_Plugin):
         return int(qx), int(qy)
 
     def drawFace(self, frame):
+        """Draw the clock face.
+        :param frame: Boolean, optional frame around the clock face.
+        """
         r = self.radius
         markStep = int(self.size / 50)
         markerShape = [(self.x+(r*0.96),self.y),(self.x+(r*0.94),self.y+markStep),(self.x+(r*0.90),self.y+markStep+markStep),(self.x+(r*0.85),self.y),(self.x+(r*0.90),self.y-markStep-markStep),(self.x+(r*0.94),self.y-markStep)]
@@ -68,6 +86,11 @@ class FunkyClockPlugin(GM_Plugin):
             i -= 1
 
     def drawHand(self, angle, length, width):
+        """Draws a single clock hand.
+        :param angle: The angle of the hand.
+        :param length: The length of the hand.
+        :param width: The width of the hand.
+        :return: The clockhand polygon."""
         clockHand = [(0,-7),(2,-8),(16,-20),(4,-28),(7,-35),(10,-36),(0,-45),(-10,-36),(-5,-35),(-1,-28),(7,-20),(-2,-8)]
         chShadow = [(0,-5),(4,-7),(18,-19),(6,-27),(9,-35),(12,-38),(2,-47),(-8,-34),(-3,-33),(1,-26),(9,-18),(1,-5)]
         rotGon = []
@@ -103,13 +126,16 @@ class FunkyClockPlugin(GM_Plugin):
         self._render(3, rotGon)
     
     def render(self):
+        """Put the clock onto the display."""
         self.funkyClock()
     
     def _render(self, color, ngon):
+        """Internal render method. DO NOT CALL THIS!"""
         self.graphics_manager.select_color(self.graphics_manager.palette[color])
         self.graphics_manager.draw_ngon(ngon)
 
     def funkyClock(self):
+        """The master method, calls all the other functions."""
         self.drawFace(True)
         hA, mA, sA, miA = self.getAngles(*self.getClock())
         self.drawHand(hA, self.size*0.007, self.size*0.005)

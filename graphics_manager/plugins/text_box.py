@@ -3,8 +3,15 @@ from graphics_manager.plugins import GM_Plugin, BoundingBox
 
 class TextBoxPlugin(GM_Plugin):
     def __init__(self, graphics_manager,position,size,**kwargs):
+        """ Text box plugin constructor.
+        :param graphics_manager: The graphics manager instance.
+        :param position: The position of the text box, (x,y), marking the upper left corner of the text box.
+        :param size: The size of the text box, (width,height).
+        kwargs: Additional keyword arguments:
+        textscale: The scale of the text. Will be overridden by the automatic text scaling inside the plugin.
+        """
         super().__init__(graphics_manager,position,size)
-        self.version = (1,0,0,4) # Fixed a positioning bug, added vertical limit to text, improved autosizing.
+        self.version = (1,0,0,6)
         self.value = ""
         self.text_scale = kwargs.get("textscale",4)
         self.bounding_box = BoundingBox(
@@ -15,6 +22,7 @@ class TextBoxPlugin(GM_Plugin):
             )
     
     def render(self):
+        """ Renders the text box to the display."""
         frame_width = 4
         if self.new_value:
             text_s1_len = self.graphics_manager.draw_text_len(str(self.value),1)

@@ -3,8 +3,17 @@ from graphics_manager.plugins import GM_Plugin, BoundingBox
 
 class LinearGaugePlugin(GM_Plugin):
     def __init__(self, graphics_manager, position, size, **kwargs):
+        """Linear gauge plugin constructor.
+        :param graphics_manager: The graphics manager instance.
+        :param position: The position of the plugin, (x,y).
+        :param size: The size of the plugin, (length,width).
+        kwargs: optional keyword arguments:
+        direction: The direction of the gauge. 0,2 = horizontal, 1,3 = vertical. 2,3 use inverted direction.
+        min_value: The value when gauge is empty. Defaults to 0.
+        max_value: The value when gauge is full. Defaults to 100.
+        """
         super().__init__(graphics_manager, position, size)
-        self.version = (1,1,0,7) # Fixed max_value not being respected.
+        self.version = (1,1,0,8)
         self.position = position
         self.direction = kwargs.get("direction", 0)
         self.min_value = kwargs.get("min_value", 0)
@@ -51,6 +60,7 @@ class LinearGaugePlugin(GM_Plugin):
                 )
     
     def render(self):
+        """Draw the gauge onto the display."""
         # if self.new_value:
         #    print("Got new value!! {}.".format(self.value))
         def resize(a_tuple,val)->tuple:

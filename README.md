@@ -28,6 +28,11 @@ To use this package in your own project, you must first import the package and c
 from graphics_manager import GraphicsManager, plugins
 gman = GraphicsManager()
 ```
+If you wish to change the color palette:
+```python
+gmain = GraphicsManager( colors=[ (0,0,0),(10,10,90),(220,5,180),(250,200,255),(180,160,250)] )
+```
+The order of colors is key, first color is black, second is background color, third is the frame color and fourth is the indicator/text color.
 #### Adding Display
 Adding the GraphicsManager alone is meaningless as it has no display or objects to be rendered onto the display.
 We create a instance of the PicoGraphics class inside the GraphicsManager instance, "gman":

@@ -1,7 +1,11 @@
 """ Copyright (cc) 2024, developer@liggist.se. Read the licence.txt file for details."""
 class GraphicsManager:
     def __init__(self,**kwargs):
-        self.version = 1,2,0,0 # BETA!!!
+        """ Initialize the graphics manager instance.
+        Keyword arguments:
+        colors -- A list of colors to use for the pallette, in order: black, background,frame, indicator, extras...
+        """
+        self.version = 1,2,0,1
         self.display = None
         self.plugins = {
             "text_box": "text_box",
@@ -24,10 +28,17 @@ class GraphicsManager:
         self.print_GM_version()
     
     def print_GM_version(self):
+        """Print the version of the GraphicsManager class."""
         print("{} version {}.{}.{}.{} loaded.".format(self.__class__.__name__,*self.version))
     
     
     def add_display(self,DisplayClass,*args,**kwargs)->bool:
+        """ Adds a display to the graphics manager.
+        args: display class name
+        kwargs:
+            class_args: arguments to pass to the display class
+            class_kwargs: keyword arguments to pass to the display class.
+        """
         success = False
         class_args = kwargs.get("class_args",None)
         class_kwargs = kwargs.get("class_kwargs",None)
@@ -42,7 +53,7 @@ class GraphicsManager:
                     colors = kwargs.get("colors", None)
                     self.palette_values = colors
                     for color in colors:
-                        if create_color == None:
+                        if self.create_color == None:
                             self.palette.append(self.display.create_pen(*color))
             elif len(self.palette_values) > 1 and len(self.palette) < 1:
                 for color in self.palette_values:
@@ -63,6 +74,13 @@ class GraphicsManager:
         return success
     
     def add_plugin(self, name, plugin_name, plugin_args, **kwargs):
+        """Adds a plugin to the GraphicsManager.
+        Parameters:
+        name -- The name of the instance of the added plugin. Must be unique.
+        plugin_name -- The name of the plugin to load.
+        plugin_args -- Arguments to pass to the plugin class.
+        kwargs -- Keyword arguments to pass to the plugin class.
+        """
         if plugin_name in self.plugins:
             plugin_filename = self.plugins[plugin_name]
             if plugin_filename not in self.loaded_plugins:
@@ -97,15 +115,22 @@ class GraphicsManager:
             print(f"Plugin '{plugin_name}' not found in available plugins.")
     
     def add_object(self,name,obj,**kwargs): # Add plugin instances
+        """deprecated, use add_plugin() instead"""
         self.objects[name] = obj
         self.objects[name].print_version()
     
     def update(self, name, value): # Update the gauge, referenced by name.
+        """Sets new value for the plugin instance.
+        parameters:
+        name -- The name of the instance of the plugin to update.
+        value -- The new value to set.
+        """
         for obj in self.objects:
             if obj == name:
                 self.objects[name].update(value)
     
     def render(self): # Render all the objects onto the display. Clears and updates the display object.
+        """ draws all the objects on the display. """
         if self.display != None:
             self.display.set_pen(self.palette[0])
             self.display.clear()

@@ -5,15 +5,13 @@ from picographics import PicoGraphics, DISPLAY_PICO_DISPLAY_2, PEN_P4
 
 ## Create the instance of GraphicsManager and provide a display:
 gman = GraphicsManager()
+### In case you wish to change the color palette:
+# gmain = GraphicsManager( colors=[ (0,0,0),(10,10,90),(220,5,180),(250,200,255),(180,160,250)] )
 gman.add_display(PicoGraphics, class_kwargs=dict(display=DISPLAY_PICO_DISPLAY_2,
                                    rotate=0,
                                    pen_type=PEN_P4))
 
 ## Add the varying objects you wish to display:
-
-
-
-
 ## Adding a Plugin
 # All plugins accept 3 positional arguments, graphicmanager instance, A position tuple, and a size tuple.
 # The gman instance is used to call the varying draw methods to render the object onto the display

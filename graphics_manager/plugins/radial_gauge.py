@@ -4,8 +4,21 @@ import math
 
 class RadialGaugePlugin(GM_Plugin):
     def __init__(self, graphics_manager, position, size, **kwargs):
+        """Radial gauge plugin constructor.
+        :param graphics_manager: The graphics manager instance.
+        :param position: The position of the plugin, (x,y).
+        :param size: The size of the plugin, (radius,direction).
+        kwargs: optional keyword arguments:
+        start_angle: The start angle of the gauge. Defaults to 215.
+        stop_angle: The stop angle of the gauge. Defaults to 90.
+        full_range: If True, the range will be from -max_value to max_value, with min_value in the middle of the gauge. Defaults to False.
+        min_value: The value when gauge is empty. Defaults to 0.
+        max_value: The value when gauge is full. Defaults to 100.
+        grad_lines: The number of graduation lines between the max/min lines. Defaults to 3.
+        
+        """
         super().__init__(graphics_manager, position, size)
-        self.version = (1, 2, 2, 2) # added max/min values for incomming variable value.
+        self.version = (1, 2, 2, 3)
         self.direction = size[1]  # Direction of the gauge needle movement
         self.center = position  # Center position of the gauge
         self.radius = size[0]  # Radius of the gauge
@@ -27,6 +40,8 @@ class RadialGaugePlugin(GM_Plugin):
         self.indicator = []
         self.draw_indicator()
     def got_new_val(self):
+        """Gets called whenever a new value is provided.
+        Clamps the value between max/min values and updates the gauge indicator angle accordingly."""
         start_val = self.min_value
         if self.value > self.max_value:
             self.value = self.max_value
@@ -58,9 +73,11 @@ class RadialGaugePlugin(GM_Plugin):
         self.draw_indicator()
     
     def draw_indicator(self):
+        """ Creates a indicator needle from stored values."""
         self.indicator = RadialGaugePlugin.rotate_ngon(self.center,self.indicator_ngon,self.current_angle)
     
     def render(self):
+        """ Renders the gauge to teh display."""
         if self.new_value:
             self.got_new_val()
         # Draw the gauge scale and center dot:
@@ -75,7 +92,16 @@ class RadialGaugePlugin(GM_Plugin):
     
     @classmethod
     def rotate_ngon(cls,origin,ngon,angle):
+        """ Rotate a polygon around a origin using a specified angle.
+        :param origin: The center of rotation as a tuple:(x,y).
+        :param ngon: The polygon to rotate as a list of tuples:[(x,y),].
+        :param angle: The angle in degrees to rotate the polygon."""
         def rotate(origin, point, radangle):
+            """ Rotate a point around a origin using a specified angle.
+            :param origin: The center of rotation as a tuple:(x,y).
+            :param point: The point to rotate as a tuple:(x,y).
+            :param radangle: The angle in radians to rotate the polygon.
+            """
             ox, oy = origin
             px, py = point
             
@@ -90,6 +116,11 @@ class RadialGaugePlugin(GM_Plugin):
     
     @classmethod
     def move_ngon(cls,ngon,x_dist,y_dist):
+        """ Moves a polygon.
+        :param ngon: The polygon to move as a list of tuples:[(x,y),].
+        :param x_dist: The x distance to move the polygon.
+        :param y_dist: The y distance to move the polygon.
+        """
         moved_ngon = []
         for point in ngon:
             out_x = point[0] + x_dist
@@ -98,6 +129,7 @@ class RadialGaugePlugin(GM_Plugin):
         return moved_ngon
     @classmethod
     def scale_ngon(cls,ngon,radius):
+        """Scale the polygon to the gauge radius specified"""
         scale = 1.0
         _scale = radius/100
         do_scale = True
@@ -112,6 +144,7 @@ class RadialGaugePlugin(GM_Plugin):
     
     @classmethod
     def create_indicator(cls,x,y,radius):
+        """ Creates a indicator needle from provided values."""
         indicator = []
         base_hand = [ (0,-14), (1,-16), (11,-42), (2,-58), (4,-73), (7,-75), (0,-94), (-7,-75), (-3,-73), (0,-58), (4,-42), (-1,-16) ] # Pointing upwards!
         indicator = RadialGaugePlugin.move_ngon(RadialGaugePlugin.scale_ngon(base_hand,radius),x,y)
@@ -119,6 +152,14 @@ class RadialGaugePlugin(GM_Plugin):
     
     @classmethod
     def create_markers(cls,x,y,radius,start_angle,stop_angle,num_chevrons):
+        """ Creates the clock hour markers.
+        :param x: The x coordinate of the center of the gauge.
+        :param y: The y coordinate of the center of the gauge.
+        :param radius: The radius of the gauge.
+        :param start_angle: The start angle of the gauge.
+        :param stop_angle: The stop angle of the gauge.
+        :param num_chevrons: The number of chevrons to draw.
+        """
         r = int(radius)
         markStep = int(radius / 40)
         chevron_shape = RadialGaugePlugin.rotate_ngon((x,y),
@@ -163,6 +204,7 @@ class RadialGaugePlugin(GM_Plugin):
     
     @staticmethod
     def map_value_to_angle(value, value_min, value_max, angle_min, angle_max):
+        """ Maps a value of one range to a angle of another range."""
         # Map value within a range to an angle within another range
         _value = value
         if type(_value) != type(1):
